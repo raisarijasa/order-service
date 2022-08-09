@@ -38,7 +38,3 @@ artifacts:
   files:
     - imagedefinitions.json
     - target/order-service.jar
- 
-cache:
-  paths:
-    - '/root/.m2/**/*'
