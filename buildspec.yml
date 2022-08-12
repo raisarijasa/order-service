@@ -12,7 +12,7 @@ phases:
       - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/cdc-rai-registry-2
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
-      #- docker pull $REPOSITORY_URI:$IMAGE_TAG
+      - docker pull $REPOSITORY_URI:$IMAGE_TAG
   build:
     commands:
       - echo Entered the build phase...
@@ -39,6 +39,6 @@ artifacts:
   files:
     - imagedefinitions.json
     - target/order-service.jar
-#cache:
-#  paths:
-#    - '/root/.m2/**/*'
+cache:
+  paths:
+    - '/root/.m2/**/*'
