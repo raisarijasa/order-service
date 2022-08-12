@@ -4,7 +4,7 @@ phases:
   pre_build:
     commands:
       - echo Entered the pre build phase...
-      #- mvn clean package
+      - mvn clean package
       - echo Logging in to Amazon ECR...
       - AWS_DEFAULT_REGION=ap-southeast-1
       - AWS_ACCOUNT_ID=872583825157
