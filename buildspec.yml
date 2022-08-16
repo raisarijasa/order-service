@@ -6,10 +6,10 @@ phases:
       - echo Entered the pre build phase...
       - mvn clean package
       - echo Logging in to Amazon ECR...
-      - AWS_DEFAULT_REGION=ap-southeast-1
-      - AWS_ACCOUNT_ID=872583825157
+      #- AWS_DEFAULT_REGION=ap-southeast-1
+      #- AWS_ACCOUNT_ID=872583825157
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
-      - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/cdc-rai-registry-2
+      - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$REPOSITORY_NAME
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
   build:
@@ -27,12 +27,12 @@ phases:
       - echo Writing image definitions file...
       - printf '[{"name":"order-service","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
       - cat imagedefinitions.json
-      - CREDENTIALS=$(aws sts assume-role --role-arn arn:aws:iam::872583825157:role/AdminCLI --role-session-name codebuild-kubectl --duration-seconds 900)
+      - CREDENTIALS=$(aws sts assume-role --role-arn arn:aws:iam::$AWS_ACCOUNT_ID:role/$ROLE_NAME --role-session-name codebuild-kubectl --duration-seconds 900)
       - export AWS_ACCESS_KEY_ID="$(echo ${CREDENTIALS} | jq -r '.Credentials.AccessKeyId')"
       - export AWS_SECRET_ACCESS_KEY="$(echo ${CREDENTIALS} | jq -r '.Credentials.SecretAccessKey')"
       - export AWS_SESSION_TOKEN="$(echo ${CREDENTIALS} | jq -r '.Credentials.SessionToken')"
       - export AWS_EXPIRATION=$(echo ${CREDENTIALS} | jq -r '.Credentials.Expiration')
-      - aws eks update-kubeconfig --name bc-mgmt --region ap-southeast-1
+      - aws eks update-kubeconfig --name $CLUSTER_NAME --region $AWS_DEFAULT_REGION
       - kubectl apply -f deploymentspec.yaml
 artifacts:
   files:
