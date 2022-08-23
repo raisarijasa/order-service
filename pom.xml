@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.javatechie</groupId>
-	<artifactId>order-service</artifactId>
+	<artifactId>cdc-rai-registry-2</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>order-service</name>
 	<description>Order Service CI/CD using AWS CodePipeline</description>
@@ -47,6 +47,29 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>${project.parent.version}</version>
+				<configuration>
+					<image>
+						<name>872583825157.dkr.ecr.ap-southeast-1.amazonaws.com/${project.artifactId}</name>
+						<tags>
+							<tag>872583825157.dkr.ecr.ap-southeast-1.amazonaws.com/${project.artifactId}:latest</tag>
+							<tag>872583825157.dkr.ecr.ap-southeast-1.amazonaws.com/${project.artifactId}:${project.version}</tag>
+						</tags>
+						<publish>true</publish>
+					</image>
+					<docker>
+						<publishRegistry>
+							<username>AWS</username>
+							<password>${env.DOCKER_TOKEN}</password>
+						</publishRegistry>
+					</docker>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 		</plugins>
 		<!-- <finalName>order-service</finalName> -->
