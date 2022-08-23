@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: container-cdc-rai
-          image: 872583825157.dkr.ecr.ap-southeast-1.amazonaws.com/cdc-rai-registry:latest
+          image: 872583825157.dkr.ecr.ap-southeast-1.amazonaws.com/cdc-rai-registry
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
